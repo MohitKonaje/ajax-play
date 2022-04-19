@@ -1,0 +1,89 @@
+<html>
+<head><style>
+    body {
+        background-color: lightgray;
+    }
+    .input-form{
+        border: darkgrey solid 2px ;
+       
+    }
+     form{
+        margin:10px;
+     }
+     .content{
+         width: 100%;
+    display: flex;
+
+    }
+
+     .nyarticle{
+         width:50%;
+        background-color: lightblue;
+        font-family: 'times new roman',times,serif;
+        }
+     .wikiarticle{
+         width:50%; 
+         background-color: lightcoral;
+         font-family: sans-serif;
+         
+         }
+</style></head>    
+<body>
+    <div class="input-form">
+<form >
+   Street: <input name="street" type="text">
+   City: <input name="city" type="text">
+    <button name="submit" type="button" onclick="getArticles()" >Submit</button>
+</form>
+</div>
+
+<h1 style="text-align: center">Where do you want to live?</h1>
+<div class="content">
+    <div class="nyarticle">
+        <h1>New York Times Articles</h1>
+        <p>Enter an address above and see the NSews articles about the location</p>
+    </div>
+    <div class="wikiarticle">
+        <h1>Wikipedia Articles</h1>
+        <p>Enter an city above and see the Wikipedia articles about the location</p>
+    </div> 
+</div>
+
+
+<script>
+   function getArticles(){
+       alert("submited");
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log("done", this.responseText);
+
+
+
+      }
+    };
+    xhttp.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ", true);
+    
+    xhttp.send();
+
+
+    var xhttp2 = new XMLHttpRequest();
+    xhttp2.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log("wiki done", this.responseText);
+
+
+
+      }
+    };
+    xhttp2.open("GET", "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Nelson Mandela&format=json", true);
+    
+    xhttp2.send();
+
+
+  
+   }
+</script>
+</body>
+</html>
