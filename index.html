@@ -30,7 +30,7 @@
 </style></head>    
 <body>
     <div class="input-form">
-<form >
+<form name="query-form">
    Street: <input name="street" type="text">
    City: <input name="city" type="text">
     <button name="submit" type="button" onclick="getArticles()" >Submit</button>
@@ -52,7 +52,11 @@
 
 <script>
    function getArticles(){
-       alert("submited");
+    
+    var street = document.forms["query-form"]["street"].value;
+    var city = document.forms["query-form"]["city"].value;
+    console.log(street)
+    console.log(city)
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -63,7 +67,7 @@
 
       }
     };
-    xhttp.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ", true);
+    xhttp.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q="+street+"&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ", true);
     
     xhttp.send();
 
@@ -77,7 +81,7 @@
 
       }
     };
-    xhttp2.open("GET", "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Nelson Mandela&format=json", true);
+    xhttp2.open("GET", "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json", true);
     
     xhttp2.send();
   
