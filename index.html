@@ -1,5 +1,6 @@
 <html>
-<head><style>
+<head>
+    <style>
     body {
         background-color: lightgray;
     }
@@ -28,18 +29,19 @@
          
          }
 </style></head>    
+
 <body>
     <div class="input-form">
-<form name="query-form">
+<form name="query-form" onsubmit="getArticles();return false">
    Street: <input name="street" type="text">
-   City: <input name="city" type="text">
-    <button name="submit" type="button" onclick="getArticles()" >Submit</button>
+   City: <input name="city" value="mumbai" type="text">
+    <button name="submit" type="submit" >Submit</button>
 </form>
 </div>
 
 <h1 style="text-align: center">Where do you want to live?</h1>
 <div class="content">
-    <div class="nyarticle">
+    <div id="nyarticle" class="nyarticle">
         <h1>New York Times Articles</h1>
         <p>Enter an address above and see the NSews articles about the location</p>
     </div>
@@ -51,24 +53,66 @@
 
 
 <script>
+
+    let nytArticles;
    function getArticles(){
     
     var street = document.forms["query-form"]["street"].value;
     var city = document.forms["query-form"]["city"].value;
-    console.log(street)
-    console.log(city)
 
+
+
+    fetch("https://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ")
+    .then(response =>{ 
+    response.json().then(data=>{
+
+      console.log("log", data)
+
+    nytArticles = data["response"]["docs"];
+    let nytElements = document.getElementById("nyarticle");
+    console.log(nytArticles);
+    
+    let list = document.createElement("ol");
+    
+
+    
+
+    for(let article of nytArticles){
+
+       let title = document.createElement("h3");
+       title.innerHTML = article["headline"]["main"];
+
+       let listItem = document.createElement("li");
+
+       let linkTag = document.createElement("a");
+       linkTag.href = article["web_url"];
+       linkTag.appendChild(title)
+       listItem.appendChild(linkTag);
+       list.appendChild(listItem);
+    }
+    nytElements.appendChild(list);
+     })
+  
+
+});
+
+/*
+  fetch("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json")
+  .then(response => response.json())
+  .then(data => console.log(data));
+*/
+
+
+/*
     var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatchange = function() {
     if (this.readyState == 4 && this.status == 200) {
       
       let jsonResponse = JSON.parse(this.responseText);
    //   console.log("done", jsonResponse.response.docs);
-
-
-
       }
     };
+    
     xhttp.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q="+street+"&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ", true);
     
     xhttp.send();
@@ -88,6 +132,9 @@
     
     xhttp2.send();
   
+*/
+
+
    }
 </script>
 </body>
