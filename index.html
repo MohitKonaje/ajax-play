@@ -45,7 +45,8 @@
         <h1>New York Times Articles</h1>
         <p>Enter an address above and see the NSews articles about the location</p>
     </div>
-    <div class="wikiarticle">
+
+    <div id="wikiarticle" class="wikiarticle">
         <h1>Wikipedia Articles</h1>
         <p>Enter an city above and see the Wikipedia articles about the location</p>
     </div> 
@@ -60,8 +61,7 @@
     var street = document.forms["query-form"]["street"].value;
     var city = document.forms["query-form"]["city"].value;
 
-
-
+//new york times fetch
     fetch("https://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ")
     .then(response =>{ 
     response.json().then(data=>{
@@ -73,9 +73,6 @@
     console.log(nytArticles);
     
     let list = document.createElement("ol");
-    
-
-    
 
     for(let article of nytArticles){
 
@@ -92,50 +89,66 @@
     }
     nytElements.appendChild(list);
      })
-  
-
 });
 
-/*
-  fetch("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json")
-  .then(response => response.json())
-  .then(data => console.log(data));
-*/
+//wiki articles fetch
+
+fetch("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json",
+        {method:"get",mode: "cors",headers: {
+                
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+        'Content-Type': 'application/json',
+            }}
+)
+    .then(wikiResponse =>{ wikiResponse.json().then(wikiArticles=>{
+        console.log("wiki done", wikiArticles["query"]["search"]);
+
+        let list = document.createElement("ol");
+        let wikiElements = document.getElementById("wikiarticle");
+
+        for(let article of wikiArticles["query"]["search"]){
+
+        let title = document.createElement("h3");
+        title.innerHTML = article["title"];
+
+        let listItem = document.createElement("li");
+
+        let linkTag = document.createElement("a");
+        linkTag.href = "https://en.wikipedia.org/wiki/"+article["title"];
+        linkTag.appendChild(title)
+        listItem.appendChild(linkTag);
+        list.appendChild(listItem);
+        }
+        wikiElements.appendChild(list);
 
 
-/*
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatchange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      
-      let jsonResponse = JSON.parse(this.responseText);
-   //   console.log("done", jsonResponse.response.docs);
-      }
-    };
+    })});
+
+
+
+// var xhttp2 = new XMLHttpRequest();
+//     xhttp2.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//       console.log("wiki done", this.responseText);
+//       let jsonResponse = JSON.parse(this.responseText);
+//       console.log("done", jsonResponse.query);
+
+
+//       }
+//     };
+//     xhttp2.open("GET", "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json", true);
     
-    xhttp.open("GET", "https://api.nytimes.com/svc/search/v2/articlesearch.json?q="+street+"&api-key=hvWBkZ2Bl5qHCUTkUbT37qBiEGAn7wVZ", true);
-    
-    xhttp.send();
-
-
-    var xhttp2 = new XMLHttpRequest();
-    xhttp2.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      console.log("wiki done", this.responseText);
-      let jsonResponse = JSON.parse(this.responseText);
-      console.log("done", jsonResponse.query);
-
-
-      }
-    };
-    xhttp2.open("GET", "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+city+"&format=json", true);
-    
-    xhttp2.send();
+//     xhttp2.send();
   
-*/
 
 
-   }
+
+
+
+
+
+}
 </script>
 </body>
 </html>
